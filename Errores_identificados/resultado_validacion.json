@@ -1,0 +1,28 @@
+[
+    {
+        "consecutivo": 1,
+        "estado": "Incorrecto",
+        "errores": {
+            "codDiagnosticoRelacionado2": {
+                "valor ingresado": "B4",
+                "sugerencias": [
+                    "B974",
+                    "B964",
+                    "B954"
+                ]
+            },
+            "codDiagnosticoRelacionado3": {
+                "valor ingresado": "28",
+                "sugerencias": [
+                    "Z928",
+                    "Z828",
+                    "Z728"
+                ]
+            }
+        }
+    },
+    {
+        "consecutivo": 2,
+        "estado": "Correcto"
+    }
+]

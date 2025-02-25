@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de JSON</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <h4 class="center">Validación de Archivos JSON</h4>
+        
+        <form action="/" method="post" enctype="multipart/form-data" class="card-panel">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Subir JSON</span>
+                    <input type="file" name="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Seleccione un archivo JSON">
+                </div>
+            </div>
+            <button type="submit" class="btn waves-effect waves-light full-width">Validar</button>
+        </form>
+
+        {% if validaciones is not none %}
+            <h5 class="center"> Resultados de Validación</h5>
+
+            <!-- Contador de registros correctos e incorrectos -->
+            <p><strong>Total de registros:</strong> {{ validaciones|length }}</p>
+            <p><strong>Correctos:</strong> <span class="green-text">{{ correctos }}</span></p>
+            <p><strong>Incorrectos:</strong> <span class="red-text">{{ incorrectos }}</span></p>
+
+            <!-- Filtro de búsqueda -->
+            <div class="input-field">
+                <input type="text" id="search" placeholder="Buscar consecutivo o error...">
+            </div>
+
+            <!-- Contenedor de resultados con paginación -->
+            <div id="results">
+                {% for item in validaciones %}
+                    <div class="card-panel result-item {% if item.estado == 'Correcto' %}green lighten-4{% else %}red lighten-4{% endif %}">
+                        <p><strong>Consecutivo:</strong> {{ item.consecutivo }}</p>
+                        <p><strong>Estado:</strong> {{ item.estado }}</p>
+
+                        {% if item.errores %}
+                            <ul>
+                                {% for error, detalle in item.errores.items() %}
+                                    <li>
+                                        <strong>{{ error }}:</strong> 
+                                        <span style="color: red;"> {{ detalle["valor ingresado"] }}</span>  
+                                        <br> <strong>Sugerencias:</strong> 
+                                        <div class="chip-container">
+                                            {% if detalle.sugerencias %}
+                                                {% for sugerencia in detalle.sugerencias %}
+                                                    <div class="chip">{{ sugerencia }}</div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="chip red lighten-2 white-text">No se encontraron valores similares</div>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Botones de paginación -->
+            <div class="pagination">
+                <a href="#" class="btn prev-page">⬅ Anterior</a>
+                <a href="#" class="btn next-page">Siguiente ➡</a>
+            </div>
+
+            <!-- Ocultar la descarga si no hay errores -->
+            {% if incorrectos > 0 %}
+                <div class="center">
+                    <h6> Puedes descargar el archivo corregido:</h6>
+                    <a href="{{ url_for('descargar') }}" class="btn green">Descargar Correcciones</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
